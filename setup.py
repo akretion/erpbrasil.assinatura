@@ -24,7 +24,7 @@ def read(*names, **kwargs):
 
 
 setup(
-    name='erpbrasil.assinatura',
+    name='erpbrasil.assinatura-nopyopenssl',
     version='1.3.0',
     license='MIT license',
     description='Assinatura de documentos com certificados digitais A1 e A3',
@@ -34,9 +34,9 @@ setup(
                                                                             'README.rst')),
         re.sub(':[a-z]+:`~?(.*?)`', r'``\1``', read('CHANGELOG.rst'))
     ),
-    author='Luis Felipe Mileo',
-    author_email='mileo@kmee.com.br',
-    url='https://github.com/erpbrasil/erpbrasil.assinatura',
+    author='Luis Felipe Mileo, Renato Lima',
+    author_email='raphael.valyi@akretion.com.br',
+    url='https://github.com/akretion/erpbrasil.assinatura',
     packages=find_packages('src'),
     package_dir={'': 'src'},
     py_modules=[splitext(basename(path))[0] for path in glob('src/*.py')],
