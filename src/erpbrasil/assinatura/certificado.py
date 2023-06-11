@@ -1,6 +1,7 @@
 import base64
 import datetime
 import os
+import sys
 import tempfile
 
 import pytz
@@ -12,6 +13,15 @@ from cryptography.x509.oid import NameOID
 from .excecoes import CertificadoExpirado
 from .excecoes import CertificadoSenhaInvalida
 from .excecoes import ErroDeLeituraDeArquivo
+
+if sys.version_info >= (3, 7):  # NOTE remove this if once Python 3.6 can be dropped
+    import contextvars
+
+    key_var = contextvars.ContextVar('key')
+    cert_var = contextvars.ContextVar('cert')
+else:
+    key_var = None
+    cert_var = None
 
 
 class Certificado():
@@ -113,7 +123,7 @@ class ArquivoCertificado():
 
     certificado = Certificado(certificado_nfe_caminho, certificado_nfe_senha)
 
-    with ArquivoCertificado(certificado, 'w') as (key, cert):
+    with ArquivoCertificado(certificado, 'r') as (key, cert):
         print(key.name)
         print(cert.name)
     """
@@ -131,11 +141,17 @@ class ArquivoCertificado():
         tmp.write(key)
 
     def __enter__(self):
+        if key_var and cert_var:
+            key_var.set(self.key_path)
+            cert_var.set(self.cert_path)
         return self.key_path, self.cert_path
 
     def __exit__(self, type, value, traceback):
         os.remove(self.key_path)
         os.remove(self.cert_path)
+        if key_var and cert_var:
+            key_var.set(None)
+            cert_var.set(None)
 
 
 def save_cert_key(cert, key):

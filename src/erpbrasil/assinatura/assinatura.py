@@ -133,7 +133,6 @@ class Assinatura(object):
         )
         return signature
 
-      
     def sign_pkcs1v15_sha1(self, data):
         """
         Sign data using PKCS1v15 padding and SHA1 hash algorithm.
